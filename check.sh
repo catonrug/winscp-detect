@@ -92,7 +92,9 @@ echo
 
 #download file
 echo Downloading $filename
-wget $url -O $tmp/$filename -q
+wget $url -O $tmp/$filename --tries 1 --timeout=100
+if [ $? -eq 0 ]; then
+echo
 
 #check downloded file size if it is fair enought
 size=$(du -b $tmp/$filename | sed "s/\s.*$//g")
@@ -185,6 +187,11 @@ python ../send-email.py "$onemail" "$name" "Downloaded file size is to small:
 $url
 $size"
 } done
+fi
+
+else
+#$filename is already in database
+echo Can not reach sourceforge at the moment "$url"
 fi
 
 else
